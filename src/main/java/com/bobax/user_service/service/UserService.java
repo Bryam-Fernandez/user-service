@@ -1,10 +1,11 @@
-package main.java.com.bobax.user.service;
+package com.bobax.user_service.service;
 
-import com.bobax.user.dto.UserDTO;
-import com.bobax.user.model.User;
-import com.bobax.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.bobax.user_service.dto.UserDTO;
+import com.bobax.user_service.model.User;
+import com.bobax.user_service.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,8 +1,9 @@
-package main.java.com.bobax.user_service.repository;
+package com.bobax.user_service.repository;
 
-import com.bobax.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import com.bobax.user_service.model.User;
 
 import java.util.List;
 import java.util.Optional;

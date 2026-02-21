@@ -1,13 +1,14 @@
-package main.java.com.bobax.user_service.controller;
+package com.bobax.user_service.controller;
 
-import com.bobax.user.dto.CreateUserRequest;
-import com.bobax.user.dto.UserDTO;
-import com.bobax.user.model.User;
-import com.bobax.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.bobax.user_service.dto.CreateUserRequest;
+import com.bobax.user_service.dto.UserDTO;
+import com.bobax.user_service.model.User;
+import com.bobax.user_service.service.UserService;
 
 import java.util.List;
 
