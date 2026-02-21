@@ -36,9 +36,9 @@ public class UserController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/username/{username}")
-    public ResponseEntity<?> getUserByUsername(@PathVariable String username) {
-        return userService.getUserByUsername(username)
+    @GetMapping("/auth/{username}")
+    public ResponseEntity<?> getUserForAuth(@PathVariable String username) {
+        return userService.getUserForAuth(username)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -54,11 +54,11 @@ public class UserController {
             User user = new User();
             user.setUsername(request.getUsername());
             user.setEmail(request.getEmail());
+            user.setPassword(request.getPassword());
             user.setFullName(request.getFullName());
             user.setPhone(request.getPhone());
             user.setAddress(request.getAddress());
             user.setRole(request.getRole() != null ? request.getRole() : "CLIENTE");
-
             User savedUser = userService.createUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
         } catch (RuntimeException e) {

@@ -1,11 +1,13 @@
 package com.bobax.user_service.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.bobax.user_service.dto.UserDTO;
 import com.bobax.user_service.model.User;
 import com.bobax.user_service.repository.UserRepository;
+import com.bobax.user_service.dto.AuthUserDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +15,11 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserService {
+	
 
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
     @Autowired
     private UserRepository userRepository;
 
@@ -24,6 +30,9 @@ public class UserService {
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new RuntimeException("El email ya existe");
         }
+
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         return userRepository.save(user);
     }
 
@@ -34,7 +43,7 @@ public class UserService {
     }
 
     public List<UserDTO> getActiveUsers() {
-        return userRepository.findByActiveTrue().stream()
+        return userRepository.findByEnabledTrue().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
@@ -68,7 +77,7 @@ public class UserService {
 
     public void deactivateUser(Long id) {
         userRepository.findById(id).ifPresent(user -> {
-            user.setActive(false);
+            user.setEnabled(false);
             userRepository.save(user);
         });
     }
@@ -87,7 +96,23 @@ public class UserService {
         dto.setAddress(user.getAddress());
         dto.setRole(user.getRole());
         dto.setCreatedAt(user.getCreatedAt());
-        dto.setActive(user.getActive());
+        dto.setEnabled(user.getEnabled());
         return dto;
+    }
+    public Optional<AuthUserDTO> getUserForAuth(String username) {
+        return userRepository.findByUsername(username).map(u -> {
+            AuthUserDTO dto = new AuthUserDTO();
+            dto.setUsername(u.getUsername());
+            dto.setPassword(u.getPassword());
+            dto.setEnabled(Boolean.TRUE.equals(u.getEnabled()));
+
+            List<String> names = userRepository.findRoleNamesByUserId(u.getId());
+            List<String> roles = names.stream()
+                    .map(r -> r.startsWith("ROLE_") ? r : "ROLE_" + r)
+                    .toList();
+
+            dto.setRoles(roles);
+            return dto;
+        });
     }
 }
